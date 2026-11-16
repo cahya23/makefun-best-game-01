@@ -7,11 +7,11 @@ import { TAU, clamp, rand, pick } from './utils.js';
 
 /** Per-kind tuning. hp scales a little with the wave (see spawnEnemy). */
 export const KINDS = {
-  wisp: { hp: 2, speed: 96, radius: 13, lanternDps: 5, ember: 3, score: 10, color: '#a78bfa' },
+  wisp: { hp: 2, speed: 96, radius: 13, lanternDps: 4, ember: 3, score: 10, color: '#a78bfa' },
   mote: { hp: 1, speed: 155, radius: 8, lanternDps: 3, ember: 1, score: 5, color: '#c4b5fd' },
   spitter: { hp: 3, speed: 62, radius: 14, lanternDps: 0, ember: 5, score: 15, color: '#f472b6' },
   splitter: { hp: 4, speed: 56, radius: 17, lanternDps: 7, ember: 6, score: 20, color: '#7dd3fc' },
-  brute: { hp: 16, speed: 44, radius: 24, lanternDps: 14, ember: 12, score: 40, color: '#fb923c' },
+  brute: { hp: 16, speed: 44, radius: 24, lanternDps: 12, ember: 12, score: 40, color: '#fb923c' },
 };
 
 export class Enemy {
@@ -63,7 +63,7 @@ export class Enemy {
     let ty = lantern.y;
     if (this.kind !== 'spitter') {
       const dPlayer = Math.hypot(player.x - this.x, player.y - this.y);
-      if (dPlayer < 230) {
+      if (dPlayer < 170) {
         tx = player.x;
         ty = player.y;
       }
@@ -85,10 +85,10 @@ export class Enemy {
       vx = (dx / d) * this.speed * radial + px * 30;
       vy = (dy / d) * this.speed * radial + py * 30;
       if (this.shootCd <= 0) {
-        this.shootCd = 2.4;
+        this.shootCd = 2.8;
         const target = Math.hypot(player.x - this.x, player.y - this.y) < 420 ? player : lantern;
         const a = Math.atan2(target.y - this.y, target.x - this.x);
-        game.fireOrb(this.x, this.y, Math.cos(a) * 150, Math.sin(a) * 150, 1);
+        game.fireOrb(this.x, this.y, Math.cos(a) * 125, Math.sin(a) * 125, 1);
         game.sfx.tone(300, 0.12, 'sine', 0.1, 160);
       }
     }
@@ -107,13 +107,17 @@ export class Enemy {
       game.damageLantern(this.lanternDps * dt, this.x, this.y);
     }
 
-    // Touching the keeper hurts them and shoves the shade away.
+    // Touching the keeper hurts them and shoves the shade away. Small
+    // shades burn out on the keeper's light when they touch it.
     const dP = Math.hypot(player.x - this.x, player.y - this.y);
     if (dP < player.radius + this.radius - 2) {
       if (player.hurt(game)) {
         const a = Math.atan2(this.y - player.y, this.x - player.x);
         this.kx += Math.cos(a) * 320;
         this.ky += Math.sin(a) * 320;
+        if ((this.kind === 'wisp' || this.kind === 'mote') && this.damage(999, game)) {
+          game.onEnemyKilled(this);
+        }
       }
     }
   }

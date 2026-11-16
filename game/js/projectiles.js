@@ -96,7 +96,7 @@ export class Ember {
     this.vx = Math.cos(a) * s;
     this.vy = Math.sin(a) * s;
     this.value = value;
-    this.life = 14;
+    this.life = 18;
     this.radius = 7;
     this.dead = false;
     this.phase = rng() * TAU;
@@ -116,8 +116,8 @@ export class Ember {
       const dx = player.x - this.x;
       const dy = player.y - this.y;
       const d = Math.hypot(dx, dy);
-      if (d < 130 && d > 1) {
-        const pull = 900 * (1 - d / 140);
+      if (d < 180 && d > 1) {
+        const pull = 900 * (1 - d / 200);
         this.vx += (dx / d) * pull * dt;
         this.vy += (dy / d) * pull * dt;
       }

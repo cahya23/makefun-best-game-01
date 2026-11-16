@@ -30,7 +30,7 @@ export class Game {
     this.input = new Input(canvas);
     this.sfx = new Sfx();
     this.player = new Player(W / 2, H - 120);
-    this.lantern = { x: W / 2, y: H / 2 - 10, hp: 100, maxHp: 100, radius: 26 };
+    this.lantern = { x: W / 2, y: H / 2 - 10, hp: 140, maxHp: 140, radius: 26 };
     this.waves = new WaveManager(this);
     this.enemies = [];
     this.bolts = [];

@@ -90,7 +90,7 @@ export class Player {
   hurt(game) {
     if (this.invuln > 0) return false;
     this.hearts -= 1;
-    this.invuln = 1.1;
+    this.invuln = 1.4;
     game.sfx.hurt();
     game.addShake(7);
     game.spawnBurst(this.x, this.y, '#ff6b6b', 14, 160);
